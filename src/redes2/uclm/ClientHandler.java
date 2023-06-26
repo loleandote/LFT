@@ -44,6 +44,7 @@ public class ClientHandler implements Runnable {
 			out.close();
 			cliente.close();
 			System.out.println("Cliente desconectado: " + cliente.getInetAddress().getHostAddress());
+			registrarAccion("Cliente desconectado: " + cliente.getInetAddress().getHostAddress());
 		} catch (IOException e) {
 			registrarError("Error al manejar la conexión con el cliente: " + e.getMessage());
 		} finally {
@@ -67,7 +68,7 @@ public class ClientHandler implements Runnable {
 			for (File file : files)
 				response.append(file.getName()).append(" (").append(file.length()).append(" bytes)\n");
 			out.writeUTF(response.toString());
-
+			registrarAccion("Contenido de la carpeta "+carpetaServidor+" enviado");
 		} else if (!folder.exists()) {
 			out.writeUTF("NO existe la carpeta");
 			registrarError("NO existe la carpeta");
@@ -92,6 +93,7 @@ public class ClientHandler implements Runnable {
 			size -= bytes; 
 		}
 		System.out.println("Archivo guardado");
+		registrarAccion("Archivo guardado");
 		fileOutputStream.close();
 	}
 
@@ -108,26 +110,41 @@ public class ClientHandler implements Runnable {
 				out.flush();
 			}
 			fileInputStream.close();
+			registrarAccion("Fichero enviado");
 		}
 		else
 			out.writeLong(-1);
 	}
+	
+	public static void registrarAccion(String accion) {
+		try {
+			FileWriter archivo = new FileWriter(new File(".\\bin\\acciones.log"), true);
+			archivo.write(devolverFecha()
+					+ " -> " + accion + "\n");
+			archivo.close();
+		} catch (IOException e) {
+			registrarError(e.getMessage());
+		}
+	}
 
 	public static void registrarError(String mensaje) {
 		try {
-			FileWriter archivo = new FileWriter(new File("bin\\log.txt"), true);
-			Calendar fechaActual = Calendar.getInstance();
-			archivo.write((String.valueOf(fechaActual.get(Calendar.DAY_OF_MONTH)) + "/"
-					+ String.valueOf(fechaActual.get(Calendar.MONTH) + 1) + "/"
-					+ String.valueOf(fechaActual.get(Calendar.YEAR)) + ";"
-					+ String.valueOf(fechaActual.get(Calendar.HOUR_OF_DAY)) + ":"
-					+ String.valueOf(fechaActual.get(Calendar.MINUTE)) + ":"
-					+ String.valueOf(fechaActual.get(Calendar.SECOND))) + " -> " + mensaje + "\n");
+			FileWriter archivo = new FileWriter(new File("bin\\errores.log"), true);
+			archivo.write(devolverFecha()
+					+ " -> " + mensaje + "\n");
 			archivo.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
+	}
+	private static String devolverFecha() {
+		Calendar fechaActual = Calendar.getInstance();
+		return (String.valueOf(fechaActual.get(Calendar.DAY_OF_MONTH)) + "/"
+				+ String.valueOf(fechaActual.get(Calendar.MONTH) + 1) + "/"
+				+ String.valueOf(fechaActual.get(Calendar.YEAR)) + "; "
+				+ String.valueOf(fechaActual.get(Calendar.HOUR_OF_DAY)) + ":"
+				+ String.valueOf(fechaActual.get(Calendar.MINUTE)) + ":"+ String.valueOf(fechaActual.get(Calendar.SECOND)));
 	}
 
 }
