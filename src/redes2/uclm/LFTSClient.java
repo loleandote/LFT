@@ -3,6 +3,8 @@ package redes2.uclm;
 import java.io.*;
 import java.net.*;
 import java.security.KeyStore;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -56,8 +58,14 @@ public class LFTSClient {
 				System.out.println("Conexión SSL implementada");
 				ClientHandler.registrarAccion("Conexión SSL implementada");
 				// Configurar la conexión SSL
-				socketSSL=configurarSSL(serverAddress, serverPort);
-				in = new DataInputStream(socketSSL.getInputStream());
+				try {
+					socketSSL=configurarSSL(serverAddress, serverPort);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				InputStream i=socketSSL.getInputStream();
+				in = new DataInputStream(i);
 				out = new DataOutputStream(socketSSL.getOutputStream());
 			}
 			String[] aciones = { "LIST", "PUT", "GET", "FIN" };
@@ -89,6 +97,7 @@ public class LFTSClient {
 			// Cerrar conexiones
 			in.close();
 			out.close();
+			if(socket!=null)
 			socket.close();
 			if (socketSSL != null)
 				socketSSL.close();
@@ -96,51 +105,53 @@ public class LFTSClient {
 
 		sc.close();
 		} catch (IOException e) {
+			e.printStackTrace();
 			ClientHandler.registrarError(e.getMessage());
 		}
 		System.out.println("Adios");
 	}
 
-	private static SSLSocket configurarSSL(String direccion, int puerto) {
+	private static SSLSocket configurarSSL(String direccion, int puerto) throws Exception {
 
-		SSLSocket cliente = null;
+		SSLSocket cliente = null;			String javaPath = "C:/Program Files/Java/jdk-19/lib/security/cacerts";
+
 		// Obtener un SSLSocketFactory y un socket cliente
-		try {
-			String javaPath = "C:/Program Files/Java/jdk-19/lib/security/cacerts";
+		 //ACCESO AL ALMACEN DE CLAVES  "cacerts" con password changeit
+        KeyStore trustedStore = KeyStore.getInstance("JKS");
+        trustedStore.load(new FileInputStream(
+            javaPath), "changeit"
+            .toCharArray());
 
-			// ACCESO AL ALMACEN DE CLAVES "cacerts" con password changeit
-			KeyStore trustedStore = KeyStore.getInstance("JKS");
-			trustedStore.load(new FileInputStream(javaPath + "cacerts"), "changeit".toCharArray());
+        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        tmf.init(trustedStore);
+        TrustManager[] trustManagers = tmf.getTrustManagers();
 
-			TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-			tmf.init(trustedStore);
-			TrustManager[] trustManagers = tmf.getTrustManagers();
-			SSLContext sc = SSLContext.getInstance("SSL");
-			sc.init(null, trustManagers, null);
-			SSLSocketFactory ssf = sc.getSocketFactory();
-			cliente = (SSLSocket) ssf.createSocket(direccion, puerto);
+        //Obtener un SSLSocketFactory y un socket cliente
+        try {
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustManagers, null);
+            SSLSocketFactory ssf = sc.getSocketFactory();
+            cliente = (SSLSocket) ssf.createSocket(direccion, puerto);
 
-			// Imprime info sobre el certificado del servidor
-			cliente.addHandshakeCompletedListener(new HandshakeCompletedListener() {
-				@Override
-				public void handshakeCompleted(HandshakeCompletedEvent hce) {
-					X509Certificate cert;
-					try {
-						cert = (X509Certificate) hce.getPeerCertificates()[0];
-						String certName = cert.getSubjectX500Principal().getName().substring(3,
-								cert.getSubjectX500Principal().getName().indexOf(","));
-						System.out.println("conectado al servidor con nombre de certificado: " + certName);
-					} catch (SSLPeerUnverifiedException e) {
-
-						e.printStackTrace();
-					}
-				}
-			});
-
-			cliente.startHandshake();
-		} catch (Exception e) {
-			ClientHandler.registrarError(e.getMessage());
-		}
+            //Imprime info sobre el certificado del servidor
+            cliente.addHandshakeCompletedListener(new HandshakeCompletedListener(){
+                @Override
+                public void handshakeCompleted(HandshakeCompletedEvent hce) {
+                    X509Certificate cert;
+                    try {
+                        cert = (X509Certificate)hce.getPeerCertificates()[0];
+                        String certName = cert.getSubjectX500Principal().getName().substring(3,cert.getSubjectX500Principal().getName().indexOf(","));
+                        System.out.println("conectado al servidor con nombre de certificado: "+certName);
+                    } catch (SSLPeerUnverifiedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            
+            cliente.startHandshake();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
 		return cliente;
 
 	}

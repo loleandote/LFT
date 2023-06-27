@@ -46,6 +46,7 @@ public class ClientHandler implements Runnable {
 			System.out.println("Cliente desconectado: " + cliente.getInetAddress().getHostAddress());
 			registrarAccion("Cliente desconectado: " + cliente.getInetAddress().getHostAddress());
 		} catch (IOException e) {
+			e.printStackTrace();
 			registrarError("Error al manejar la conexión con el cliente: " + e.getMessage());
 		} finally {
 			try {

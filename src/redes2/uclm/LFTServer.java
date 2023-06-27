@@ -32,7 +32,7 @@ public class LFTServer {
 			// Iniciamos el servidor en el puerto especificado
 			servidor = new ServerSocket(puerto);
 			System.out.println("LFTServer iniciado en el puerto " + puerto);
-			ClientHandler.registrarAccion("LFTServer iniciado en el puerto " + puerto);
+			ClientHandler.registrarAccion(" Servidor: "+"LFTServer iniciado en el puerto " + puerto);
 			// Crear el ExecutorService para administrar los hilos de los clientes
 			ExecutorService executor = Executors.newFixedThreadPool(maxClientes);
 			while (true) {
@@ -46,20 +46,20 @@ public class LFTServer {
 					new ClientHandler(cliente, carpetaServidor).run();
 			}
 		} catch (IOException e) {
-			ClientHandler.registrarError("Error al iniciar el servidor: " + e.getMessage());
+			ClientHandler.registrarError(" Servidor: "+"Error al iniciar el servidor: " + e.getMessage());
 		} finally {
 			if (servidor != null) {
 				try {
 					servidor.close();
 				} catch (IOException e) {
-					ClientHandler.registrarError("Error al cerrar el servidor: " + e.getMessage());
+					ClientHandler.registrarError(" Servidor: "+"Error al cerrar el servidor: " + e.getMessage());
 				}
 			}
 		}
 	}
 
 	private SSLServerSocket configurarSSL() {
-		String java_path = "./certificados/serverkey.jks";
+		String java_path = "certificados_server/serverKey.jks";
 		SSLServerSocket serverSocket = null;
 		// Conseguir una factoría de sockets y un ServerSocket
 		try {
@@ -70,14 +70,16 @@ public class LFTServer {
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 			kmf.init(keyStore, "servpass".toCharArray());
 			KeyManager[] keyManagers = kmf.getKeyManagers();
+			
 			SSLContext sc = SSLContext.getInstance("SSL");
 			sc.init(keyManagers, null, null);
 			SSLServerSocketFactory ssf = sc.getServerSocketFactory();
 			serverSocket = (SSLServerSocket) ssf.createServerSocket(puerto);
 			System.out.println("servidor arrancado...");
-			ClientHandler.registrarAccion("servidor arrancado...");
+			ClientHandler.registrarAccion(" Servidor: "+"servidor arrancado...");
 		} catch (Exception e) {
 			e.printStackTrace();
+			ClientHandler.registrarError(" Servidor: "+e.getMessage());
 		}
 		return serverSocket;
 	}
@@ -102,13 +104,13 @@ public class LFTServer {
 					new ClientHandler(cliente, carpetaServidor).run();
 			}
 		} catch (IOException e) {
-			ClientHandler.registrarError("Error al iniciar el servidor: " + e.getMessage());
+			ClientHandler.registrarError(" Servidor: "+"Error al iniciar el servidor: " + e.getMessage());
 		} finally {
 			if (socket != null) {
 				try {
 					socket.close();
 				} catch (IOException e) {
-					ClientHandler.registrarError("Error al cerrar el servidor: " + e.getMessage());
+					ClientHandler.registrarError(" Servidor: "+"Error al cerrar el servidor: " + e.getMessage());
 				}
 			}
 		}

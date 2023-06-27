@@ -1,22 +1,15 @@
-26/6/2023; 13:29:6 -> LFTServer iniciado en el puerto 12344
-26/6/2023; 13:29:10 -> Cliente conectado: 127.0.0.1
-26/6/2023; 13:29:16 -> Contenido de la carpeta C:\Users\yo\Desktop\cosas enviado
-26/6/2023; 13:29:16 -> Cliente desconectado: 127.0.0.1
-26/6/2023; 13:31:6 -> Cliente conectado: 127.0.0.1
-26/6/2023; 13:31:14 -> Fichero enviado
-26/6/2023; 13:31:14 -> Cliente desconectado: 127.0.0.1
-26/6/2023; 13:32:24 -> Cliente conectado: 127.0.0.1
-26/6/2023; 13:32:29 -> Contenido de la carpeta C:\Users\yo\Desktop\cosas enviado
-26/6/2023; 13:32:29 -> Cliente desconectado: 127.0.0.1
-26/6/2023; 13:32:29 -> Cliente conectado: 127.0.0.1
-26/6/2023; 13:33:23 -> Cliente conectado: 127.0.0.1
-26/6/2023; 13:33:27 -> Contenido de la carpeta C:\Users\yo\Desktop\cosas enviado
-26/6/2023; 13:33:27 -> Cliente desconectado: 127.0.0.1
-26/6/2023; 13:33:27 -> Cliente conectado: 127.0.0.1
-26/6/2023; 13:34:36 -> Cliente conectado: 127.0.0.1
-26/6/2023; 13:34:40 -> Contenido de la carpeta C:\Users\yo\Desktop\cosas enviado
-26/6/2023; 13:34:40 -> Cliente desconectado: 127.0.0.1
-26/6/2023; 13:34:40 -> Cliente conectado: 127.0.0.1
-26/6/2023; 13:34:50 -> Fichero enviado
-26/6/2023; 13:34:50 -> Cliente desconectado: 127.0.0.1
-26/6/2023; 13:34:50 -> Cliente conectado: 127.0.0.1
+27/6/2023; 1:5:51 -> Conexión SSL implementada
+27/6/2023; 1:6:18 ->  Servidor: servidor arrancado...
+27/6/2023; 1:6:20 -> Conexión SSL implementada
+27/6/2023; 1:6:20 -> Cliente conectado: 127.0.0.1
+27/6/2023; 1:8:17 -> Conexión SSL implementada
+27/6/2023; 1:8:17 -> Cliente conectado: 127.0.0.1
+27/6/2023; 1:9:22 ->  Servidor: servidor arrancado...
+27/6/2023; 1:9:24 -> Conexión SSL implementada
+27/6/2023; 1:9:24 -> Cliente conectado: 127.0.0.1
+27/6/2023; 1:14:40 ->  Servidor: servidor arrancado...
+27/6/2023; 1:14:43 -> Conexión SSL implementada
+27/6/2023; 1:14:43 -> Cliente conectado: 127.0.0.1
+27/6/2023; 1:18:16 ->  Servidor: servidor arrancado...
+27/6/2023; 1:18:17 -> Conexión SSL implementada
+27/6/2023; 1:18:17 -> Cliente conectado: 127.0.0.1
